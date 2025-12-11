@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class AlbumDao {
@@ -209,7 +210,28 @@ public class AlbumDao {
         }
     }
 
-    private Album mapRowToAlbum(ResultSet results) throws SQLException {
+    public Album getPlayCount(int albumId) {
+        String query = "SELECT COUNT(ap.play_id) as \"play_count\", a.*, ar.name as artist_name FROM albums as a JOIN album_plays as ap ON (ap.album_id = a.album_id) JOIN artists as ar on (a.artist_id = ar.artist_id) WHERE ap.album_id = ? GROUP BY ap.album_id;";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, albumId);
+
+            try (ResultSet results = statement.executeQuery()) {
+                if (results.next()) {
+                    return mapRowToAlbum(results);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error getting album by ID", e);
+        }
+
+        return null;
+    }
+
+     private Album mapRowToAlbum(ResultSet results) throws SQLException {
         Album album = new Album();
         album.setAlbumId(results.getInt("album_id"));
         album.setArtistId(results.getInt("artist_id"));

@@ -4,9 +4,12 @@ import com.mangomusic.dao.AlbumDao;
 import com.mangomusic.dao.ArtistDao;
 import com.mangomusic.model.Album;
 import com.mangomusic.model.Artist;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AlbumService {
@@ -90,5 +93,9 @@ public class AlbumService {
                 throw new IllegalArgumentException("Release year must be between 1900 and 2100");
             }
         }
+    }
+
+    public Album getPlayCount(int albumId) {
+        return albumDao.getPlayCount(albumId);
     }
 }
