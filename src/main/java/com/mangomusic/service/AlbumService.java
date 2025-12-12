@@ -98,4 +98,8 @@ public class AlbumService {
     public Album getPlayCount(int albumId) {
         return albumDao.getPlayCount(albumId);
     }
+
+    public Album getRecentAlbums(int limit) {
+        return albumDao.getRecentAlbums(limit);
+    }
 }

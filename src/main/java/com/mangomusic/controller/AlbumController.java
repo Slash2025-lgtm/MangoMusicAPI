@@ -82,4 +82,9 @@ public class AlbumController {
     public ResponseEntity<Album> getPlayCount(@PathVariable int id) {
         return ResponseEntity.ok(albumService.getPlayCount(id));
     }
+
+    @GetMapping("/recent")
+    public ResponseEntity<Album> getRecentAlbums(@RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(albumService.getRecentAlbums(limit));
+    }
 }

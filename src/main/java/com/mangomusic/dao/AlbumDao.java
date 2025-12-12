@@ -231,6 +231,27 @@ public class AlbumDao {
         return null;
     }
 
+    public Album getRecentAlbums(int limit) {
+        String query = "SELECT COUNT(ap.play_id) as \"play_count\", a.*, ar.name as artist_name FROM albums as a JOIN album_plays as ap ON (ap.album_id = a.album_id) JOIN artists as ar on (a.artist_id = ar.artist_id) GROUP BY a.album_id ORDER BY a.release_year DESC LIMIT ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, limit);
+
+            try (ResultSet results = statement.executeQuery()) {
+                if (results.next()) {
+                    return mapRowToAlbum(results);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error getting album by ID", e);
+        }
+
+        return null;
+    }
+
      private Album mapRowToAlbum(ResultSet results) throws SQLException {
         Album album = new Album();
         album.setAlbumId(results.getInt("album_id"));

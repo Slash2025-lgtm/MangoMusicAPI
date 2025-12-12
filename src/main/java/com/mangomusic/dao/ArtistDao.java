@@ -178,7 +178,7 @@ public class ArtistDao {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error getting album by ID", e);
+            throw new RuntimeException("Error getting to album: ", e);
         }
 
         return null;
