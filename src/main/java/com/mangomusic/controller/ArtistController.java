@@ -71,4 +71,9 @@ public class ArtistController {
         }
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/top-album")
+    public ResponseEntity<?> getTopAlbum(@PathVariable int id) {
+        return ResponseEntity.ok(artistService.getTopArtist(id));
+    }
 }

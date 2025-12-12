@@ -1,5 +1,6 @@
 package com.mangomusic.dao;
 
+import com.mangomusic.model.Album;
 import com.mangomusic.model.Artist;
 import org.springframework.stereotype.Repository;
 
@@ -162,6 +163,25 @@ public class ArtistDao {
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting artist", e);
         }
+    }
+
+    public Artist getTopAlbum(int albumId) {
+        String query = "SELECT COUNT(ap.play_id) as \"play_count\", ar.* FROM albums as a JOIN album_plays as ap ON (ap.album_id = a.album_id) JOIN artists as ar on (a.artist_id = ar.artist_id) GROUP BY ap.album_id ORDER BY play_count DESC;";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            try (ResultSet results = statement.executeQuery()) {
+                if (results.next()) {
+                    return mapRowToArtist(results);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error getting album by ID", e);
+        }
+
+        return null;
     }
 
     private Artist mapRowToArtist(ResultSet results) throws SQLException {
